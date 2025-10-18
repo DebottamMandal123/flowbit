@@ -1,9 +1,10 @@
-import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 export default function Home() {
+
   return (
-    <div className={cn("text-red-500 font-bold")}>
-      Hello World
+    <div className="flex items-center justify-center min-h-screen">
+      <Button>Click me</Button>
     </div>
   );
 }

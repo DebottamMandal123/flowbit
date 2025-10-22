@@ -7,7 +7,7 @@ import { Spinner } from "@/components/ui/spinner";
 const Page = async () => {
   const queryClient = getQueryClient();
 
-  void queryClient.prefetchQuery(trpc.getUsers.queryOptions());
+  await queryClient.prefetchQuery(trpc.getUsers.queryOptions());
 
   return (
     <div className="flex items-center justify-center min-h-screen">

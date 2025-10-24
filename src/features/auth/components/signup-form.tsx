@@ -8,6 +8,9 @@ import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
+import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 const SignupSchema = z.object({
     email: z.email("Please enter a valid email address"),
@@ -21,6 +24,7 @@ const SignupSchema = z.object({
 type SignupFormValues = z.infer<typeof SignupSchema>;
 
 export const SignupForm = () => {
+    const router = useRouter();
 
     const form = useForm<SignupFormValues>({
         resolver: zodResolver(SignupSchema),
@@ -32,7 +36,19 @@ export const SignupForm = () => {
     });
 
     const onSubmit = async (values: SignupFormValues) => {
-        console.log(values)
+        await authClient.signUp.email({
+            name: values.email,
+            email: values.email,
+            password: values.password,
+            callbackURL: "/"
+        },{
+            onSuccess: () => {
+                router.push("/");
+            },
+            onError: (ctx) => {
+                toast.error(ctx.error.message);
+            }
+        })
     }
 
     const isPending = form.formState.isSubmitting

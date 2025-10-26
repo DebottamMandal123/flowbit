@@ -1,19 +1,16 @@
-"use client"
+import { LogoutForm } from "@/features/auth/components/logout-form";
+import { requireAuth } from "@/lib/auth-utils";
+import { caller } from "@/trpc/server";
 
-import { Button } from "@/components/ui/button";
-import { authClient } from "@/lib/auth-client";
+const Page = async () => {
+  await requireAuth();
 
-const Page = () => {
-  const { data } = authClient.useSession();
+  const data = await caller.getUsers();
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
+    <div className="flex flex-col gap-y-4 px-40 items-center justify-center min-h-screen">
       {JSON.stringify(data)}
-      {data &&
-        <Button onClick={() => authClient.signOut()}>
-          Logout
-        </Button>
-      }
+      <LogoutForm />
     </div>
   );
 } 

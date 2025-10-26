@@ -8,6 +8,10 @@ import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
+import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { Loader } from "lucide-react";
 
 const loginSchema = z.object({
     email: z.email("Please enter a valid email address"),
@@ -17,6 +21,7 @@ const loginSchema = z.object({
 type LoginFormValues = z.infer<typeof loginSchema>;
 
 export const LoginForm = () => {
+    const router = useRouter()
 
     const form = useForm<LoginFormValues>({
         resolver: zodResolver(loginSchema),
@@ -27,7 +32,19 @@ export const LoginForm = () => {
     });
 
     const onSubmit = async (values: LoginFormValues) => {
-        console.log(values)
+        await authClient.signIn.email({
+            email: values.email,
+            password: values.password,
+            callbackURL: "/",
+        }, {
+            onSuccess: () => {
+                router.push("/")
+            },
+            onError: (ctx) => {
+                toast.error(ctx.error.message);
+                
+            }
+        })
     }
 
     const isPending = form.formState.isSubmitting
@@ -101,7 +118,10 @@ export const LoginForm = () => {
                                         className="w-full"
                                         disabled={isPending}
                                     >
-                                        Login
+                                        {isPending && (
+                                            <Loader className="h-4 w-4 animate-spin" />
+                                        )}
+                                        {isPending ? "Logging in ..." : "Login"} 
                                     </Button>
                                 </div>
                                 <div className="text-center text-sm">

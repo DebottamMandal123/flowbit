@@ -11,14 +11,15 @@ import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { Loader } from "lucide-react";
 
 const SignupSchema = z.object({
     email: z.email("Please enter a valid email address"),
-    password: z.string().min(6, "Password is required"),
+    password: z.string().min(6, "Password must be at least 6 characters"),
     confirmPassword: z.string()
 }).refine((data) => data.password == data.confirmPassword, {
     message: "Passwords don't match",
-    path: ["password","confirmPassword"]
+    path: ["confirmPassword"]
 })
 
 type SignupFormValues = z.infer<typeof SignupSchema>;
@@ -139,7 +140,10 @@ export const SignupForm = () => {
                                         className="w-full"
                                         disabled={isPending}
                                     >
-                                        Signup
+                                        {isPending && (
+                                            <Loader className="h-4 w-4 animate-spin" />
+                                        )}
+                                        {isPending ? "Signing up ..." : "Signup"}
                                     </Button>
                                 </div>
                                 <div className="text-center text-sm">

@@ -12,6 +12,7 @@ import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Loader } from "lucide-react";
+import Image from "next/image";
 
 const loginSchema = z.object({
     email: z.email("Please enter a valid email address"),
@@ -69,12 +70,14 @@ export const LoginForm = () => {
                                         variant={"outline"} className="w-full"
                                         type="button"
                                         disabled={isPending}>
+                                            <Image src={"/google.svg"} alt="google" height={20} width={20} />
                                             Continue with Google 
                                     </Button>
                                     <Button 
                                         variant={"outline"} className="w-full"
                                         type="button"
                                         disabled={isPending}>
+                                            <Image src={"/github.svg"} alt="github" height={20} width={20} />
                                             Continue with Github
                                     </Button>
                                 </div>
